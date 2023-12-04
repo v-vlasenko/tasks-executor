@@ -29,6 +29,7 @@ pip install -r requirements.txt
 ```
 
 5. Initialize a database 
+(if you have `ModuleNotFoundError: No module named 'dotenv'` try to exit venv (Ctrl+D) and activating again `source venv/bin/activate`)
 ```bash
 flask db init
 ```
@@ -37,4 +38,4 @@ flask db init
 ```bash
 flask run
 ```
-(if you have `ModuleNotFoundError: No module named 'dotenv'` try to exit venv (Ctrl+D) and activating again `source venv/bin/activate`)
+
