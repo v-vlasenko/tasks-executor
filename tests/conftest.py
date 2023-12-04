@@ -56,7 +56,8 @@ def owner_token(client, create_user_owner):
     response = client.post('/login', json={"data": {
         "attributes": {
             "username": create_user_owner.username,
-            "password": "test_password"}}}, headers={'Content-Type': 'application/vnd.api+json'})
+            "password": "test_password"
+        }}}, headers={'Content-Type': 'application/vnd.api+json'})
 
     assert response.status_code == 201
     data = response.get_json()['data']
@@ -68,7 +69,8 @@ def not_owner_token(client, create_user):
     response = client.post('/login', json={"data": {
         "attributes": {
             "username": create_user.username,
-            "password": "test_password"}}}, headers={'Content-Type': 'application/vnd.api+json'})
+            "password": "test_password"
+        }}}, headers={'Content-Type': 'application/vnd.api+json'})
 
     assert response.status_code == 201
     data = response.get_json()['data']
