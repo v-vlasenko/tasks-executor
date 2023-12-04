@@ -17,7 +17,7 @@ class Users(db.Model):
     user_id = db.Column(db.String(64), primary_key=True, default=lambda: str(uuid4()), index=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    account_id = db.Column(db.Integer, db.ForeignKey('account.account_id'), nullable=False)
+    account_id = db.Column(db.String(36), db.ForeignKey('account.account_id'), nullable=False)
     account = db.relationship('Account', backref='users')
     is_owner = db.Column(db.Boolean, default=False)
 
