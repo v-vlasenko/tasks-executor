@@ -3,7 +3,7 @@ This is an application that executes bash commands in docker containers.
 
 
 # How to run the project
-1. Clone the repository 
+1. Clone the repository
 ```bash
 git clone https://github.com/v-vlasenko/tasks-executor.git
 ```
@@ -15,7 +15,7 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-3. Configure environment variables: create a `.env` with following variables:
+3. Configure environment variables: create a `.env` file in root folder with following variables:
 ```
 FLASK_APP=task_executor.py
 DATABASE_URL=sqlite:///app.db
