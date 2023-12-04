@@ -15,20 +15,23 @@ def invite():
     new_username = attributes.get('new_username')
 
     if not attributes or not new_username:
-        return ({"errors": [
-            {"status": "400",
-             "detail": "Invalid syntax"}]}), 400
+        return ({"errors": [{
+            "status": "400",
+            "detail": "Invalid syntax"
+        }]}), 400
 
     if not current_user.is_owner:
-        return ({"errors": [
-            {"status": "403",
-             "detail": "User must be an owner to invite other users"}]}), 403
+        return ({"errors": [{
+            "status": "403",
+            "detail": "User must be an owner to invite other users"
+        }]}), 403
 
     existing_user = Users.query.filter_by(username=new_username).first()
     if existing_user:
-        return ({"errors": [
-            {"status": "422",
-             "detail": "User already exists"}]}), 422
+        return ({"errors": [{
+            "status": "422",
+            "detail": "User already exists"
+        }]}), 422
 
     temp_password = Users.generate_temp_password()
 
@@ -39,7 +42,8 @@ def invite():
 
     return ({"data": {
         "new_username": new_username,
-        "temporary_password": temp_password}}), 201
+        "temporary_password": temp_password
+    }}), 201
 
 
 @bp.route('/get_info', methods=['GET'])
