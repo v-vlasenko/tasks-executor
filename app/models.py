@@ -7,13 +7,13 @@ from app import db, jwt
 
 
 class Account(db.Model):
-    id = db.Column(db.Integer, autoincrement=True)
+    id = db.Column(db.Integer, autoincrement=True, unique=True)
     account_name = db.Column(db.String(100), unique=True, nullable=False)
     account_id = db.Column(db.String(64), primary_key=True, default=lambda: str(uuid4()), index=True)
 
 
 class Users(db.Model):
-    id = db.Column(db.Integer, autoincrement=True)
+    id = db.Column(db.Integer, autoincrement=True, unique=True)
     user_id = db.Column(db.String(64), primary_key=True, default=lambda: str(uuid4()), index=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
