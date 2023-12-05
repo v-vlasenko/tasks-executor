@@ -27,8 +27,8 @@ class Users(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    @classmethod
-    def generate_temp_password(cls, length=16):
+    @staticmethod
+    def generate_temp_password(length=16):
         characters = string.ascii_letters + string.digits + string.punctuation
         temp_password = ''.join(secrets.choice(characters) for _ in range(length))
         return temp_password
