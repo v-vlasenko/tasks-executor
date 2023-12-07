@@ -1,6 +1,6 @@
 from datetime import timedelta
 from app import db, jwt
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt
 from app.models import Users, Account, TokenBlockList
 
@@ -18,7 +18,7 @@ def signup():
         account_name = attributes.get('account_name')
 
         if not attributes or not username or not password or not account_name:
-            return ({'errors': [{
+            return jsonify({'errors': [{
                 'status': '422',
                 'detail': 'Some attributes are missing. '
                 'Username, password and account name are required'
@@ -26,14 +26,14 @@ def signup():
 
         existing_user = Users.query.filter_by(username=username).first()
         if existing_user:
-            return ({'errors': [{
+            return jsonify({'errors': [{
                 'status': '422', 
                 'detail': 'User already exists'
             }]}), 422
 
         existing_account = Account.query.filter_by(account_name=account_name).first()
         if existing_account:
-            return ({'errors': [{
+            return jsonify({'errors': [{
                 'status': '422', 
                 'detail': 'Account name already exists'
             }]}), 422
@@ -45,11 +45,11 @@ def signup():
         new_user = Users(username=username, account_id=new_account.account_id, is_owner=True)
         new_user.set_password(password)
         db.session.add(new_user)
-
-        access_token = create_access_token(identity=new_user.username, expires_delta=timedelta(hours=2))
         db.session.commit()
 
-        return ({
+        access_token = create_access_token(identity=new_user.username, expires_delta=timedelta(hours=2))
+
+        return jsonify({
             'data': {
                 'id': new_user.user_id,
                 'type': 'users',
@@ -68,7 +68,7 @@ def signup():
             }
         }), 201
     except (KeyError, TypeError):
-        return ({"errors": [{
+        return jsonify({"errors": [{
             "status": "400", 
             "detail": "Invalid JSON structure"
         }]}), 400
@@ -84,13 +84,13 @@ def login():
         password = attributes.get('password')
 
         if not data or 'username' not in attributes or 'password' not in attributes:
-            return ({'errors': [{
+            return jsonify({'errors': [{
                 'status': '422', 
                 'detail': 'Username and password are required fields'
             }]}), 422
 
         if not username or not password:
-            return ({'errors': [{
+            return jsonify({'errors': [{
                 'status': '422', 
                 'detail': 'Username and password are required fields'
             }]}), 422
@@ -103,19 +103,19 @@ def login():
             }]}), 401
 
         if not user.check_password(password):
-            return ({'errors': [{
+            return jsonify({'errors': [{
                 'status': '401', 
                 'detail': 'Invalid username or password'
             }]}), 401
 
         if user and user.check_password(password):
             access_token = create_access_token(identity=user.username, expires_delta=timedelta(hours=2))
-            return ({'data': {
+            return jsonify({'data': {
                 'message': 'Users is successfully logged in', 
                 'token': access_token
             }}), 201
     except (KeyError, TypeError):
-        return ({"errors": [{
+        return jsonify({"errors": [{
             'status': '400', 
             'detail': 'Invalid JSON structure'
         }]}), 400
@@ -127,7 +127,7 @@ def logout():
     jti = get_jwt()['jti']
     token = TokenBlockList.query.filter_by(jti=jti).first()
     if token:
-        return ({'errors': [{
+        return jsonify({'errors': [{
             'status': '422', 
             'detail': 'Token has been already revoked'
         }]}), 401
@@ -135,14 +135,14 @@ def logout():
     blocklist = TokenBlockList(jti=jti)
     db.session.add(blocklist)
     db.session.commit()
-    return ({'data': {
+    return jsonify({'data': {
         'message': 'Users is successfully logged out'
     }}), 201
 
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_data):
-    return ({'errors': [{
+    return jsonify({'errors': [{
         'status': '401',
         'title': 'Unauthorized',
         'detail': 'Token is expired'
@@ -151,7 +151,7 @@ def expired_token_callback(jwt_header, jwt_data):
 
 @jwt.invalid_token_loader
 def invalid_token_callback(error):
-    return ({'errors': [{
+    return jsonify({'errors': [{
         'status': '401',
         'title': 'Unauthorized',
         'detail': 'Invalid token, signature verification failed'
@@ -160,7 +160,7 @@ def invalid_token_callback(error):
 
 @jwt.unauthorized_loader
 def missing_token_callback(error):
-    return ({'errors': [{
+    return jsonify({'errors': [{
         'status': '401',
         'title': 'Unauthorized',
         'detail': "Request doesn't contain a valid token"
@@ -169,7 +169,7 @@ def missing_token_callback(error):
 
 @jwt.revoked_token_loader
 def revoked_token_callback(jwt_header, jwt_data):
-    return ({'errors': [{
+    return jsonify({'errors': [{
         'status': '422',
         'detail': 'Token has been already revoked'
     }]}), 422

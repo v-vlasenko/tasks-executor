@@ -1,6 +1,6 @@
 from app import db
 from app.models import Users, Account
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, current_user
 
 bp = Blueprint('user', __name__)
@@ -15,20 +15,20 @@ def invite():
     new_username = attributes.get('new_username')
 
     if not attributes or not new_username:
-        return ({"errors": [{
+        return jsonify({"errors": [{
             "status": "400",
             "detail": "Invalid syntax"
         }]}), 400
 
     if not current_user.is_owner:
-        return ({"errors": [{
+        return jsonify({"errors": [{
             "status": "403",
             "detail": "User must be an owner to invite other users"
         }]}), 403
 
     existing_user = Users.query.filter_by(username=new_username).first()
     if existing_user:
-        return ({"errors": [{
+        return jsonify({"errors": [{
             "status": "422",
             "detail": "User already exists"
         }]}), 422
@@ -40,7 +40,7 @@ def invite():
     db.session.add(new_user)
     db.session.commit()
 
-    return ({"data": {
+    return jsonify({"data": {
         "new_username": new_username,
         "temporary_password": temp_password
     }}), 201
@@ -51,7 +51,7 @@ def invite():
 def get_info():
     account_name = Account.query.filter_by(account_id=current_user.account_id).first().account_name
     account_id = Account.query.filter_by(account_id=current_user.account_id).first().account_id
-    return ({
+    return jsonify({
         "data": {
             "type": "users",
             "id": current_user.user_id,
