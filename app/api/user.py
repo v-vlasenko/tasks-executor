@@ -61,7 +61,7 @@ def get_info():
             },
             "relationships": {
                 "account": {
-                    "data": {"type": "accounts", "name": account_id}
+                    "data": {"type": "accounts", "id": account_id}
                 }
             }
         }

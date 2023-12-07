@@ -53,7 +53,7 @@ def create_account(app):
 
 @pytest.fixture
 def owner_token(client, create_user_owner):
-    response = client.post('/login', json={"data": {
+    response = client.post('/api/auth/login', json={"data": {
         "attributes": {
             "username": create_user_owner.username,
             "password": "test_password"
@@ -66,7 +66,7 @@ def owner_token(client, create_user_owner):
 
 @pytest.fixture
 def not_owner_token(client, create_user):
-    response = client.post('/login', json={"data": {
+    response = client.post('/api/auth/login', json={"data": {
         "attributes": {
             "username": create_user.username,
             "password": "test_password"

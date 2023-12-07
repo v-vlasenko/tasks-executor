@@ -1,5 +1,5 @@
 def test_successful_invite(client, create_user_owner, owner_token):
-    response = client.post('/user/invite', json={
+    response = client.post('/api/user/invite', json={
         'data': {'attributes': {
             'new_username': 'new_user'
         }}}, headers={
@@ -14,7 +14,7 @@ def test_successful_invite(client, create_user_owner, owner_token):
 
 
 def test_invite_not_by_owner(client, create_user, not_owner_token):
-    response = client.post('/user/invite', json={
+    response = client.post('/api/user/invite', json={
         'data': {'attributes': {
             'new_username': 'new_user'
         }}}, headers={
@@ -29,7 +29,7 @@ def test_invite_not_by_owner(client, create_user, not_owner_token):
 
 
 def test_existing_user_invite(client, create_user_owner, owner_token, create_user):
-    response = client.post('/user/invite', json={
+    response = client.post('/api/user/invite', json={
         'data': {'attributes': {
             'new_username': create_user.username
         }}}, headers={
@@ -44,6 +44,6 @@ def test_existing_user_invite(client, create_user_owner, owner_token, create_use
 
 
 def test_invite_unauthorized(client):
-    response = client.get('/user/get_info')
+    response = client.get('/api/user/get_info')
     assert response.status_code == 401
 

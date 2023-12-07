@@ -1,5 +1,5 @@
 def test_successful_signup(client):
-    response = client.post('/signup', json={
+    response = client.post('/api/auth/signup', json={
         'data': {
             'attributes': {
                 'username': 'test_user',
@@ -16,7 +16,7 @@ def test_successful_signup(client):
 
 
 def test_with_existing_user(client, create_user_owner):
-    response = client.post('/signup', json={
+    response = client.post('/api/auth/signup', json={
         'data': {
             'attributes': {
                 'username': 'test_user_owner',
@@ -34,7 +34,7 @@ def test_with_existing_user(client, create_user_owner):
 
 
 def test_missing_required_fields(client):
-    response = client.post('/signup', json={
+    response = client.post('/api/auth/signup', json={
         'data': {
             'attributes': {
                 'username': 'test_user_missing_fields'

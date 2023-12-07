@@ -1,5 +1,5 @@
 def test_login(client, create_user_owner):
-    response = client.post('/login', json={
+    response = client.post('/api/auth/login', json={
         'data': {
             'attributes': {
                 'username': 'test_user_owner',
@@ -12,7 +12,7 @@ def test_login(client, create_user_owner):
 
 
 def test_invalid_password(client, create_user_owner):
-    response = client.post('/login', json={
+    response = client.post('/api/auth/login', json={
         'data': {
             'attributes': {
                 'username': 'test_user_owner',
@@ -26,7 +26,7 @@ def test_invalid_password(client, create_user_owner):
 
 
 def test_invalid_username(client, create_user_owner):
-    response = client.post('/login', json={
+    response = client.post('/api/auth/login', json={
         'data': {
             'attributes': {
                 'username': 'test_invalid',
@@ -40,7 +40,7 @@ def test_invalid_username(client, create_user_owner):
 
 
 def test_missing_username_or_password(client):
-    response = client.post('/login', json={
+    response = client.post('/api/auth/login', json={
         'data': {
             'attributes': {
                 'password': 'test_password'}}}, headers={'Content-Type': 'application/vnd.api+json'})
@@ -53,7 +53,7 @@ def test_missing_username_or_password(client):
 
 
 def test_user_not_found(client):
-    response = client.post('/login', json={
+    response = client.post('/api/auth/login', json={
         'data': {
             'attributes': {
                 'username': 'nonexistent_user',

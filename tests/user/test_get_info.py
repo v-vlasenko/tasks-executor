@@ -1,5 +1,5 @@
 def test_get_info(client, create_user_owner, owner_token):
-    response = client.get('/user/get_info', headers={'Authorization': f'Bearer {owner_token}'})
+    response = client.get('/api/user/get_info', headers={'Authorization': f'Bearer {owner_token}'})
 
     assert response.status_code == 200
     data = response.get_json()['data']
@@ -15,9 +15,9 @@ def test_get_info(client, create_user_owner, owner_token):
     assert 'relationships' in data and 'account' in data['relationships']
     account_data = data['relationships']['account']['data']
     assert 'type' in account_data and account_data['type'] == 'accounts'
-    assert 'name' in account_data and account_data['name'] == create_user_owner.account_id
+    assert 'id' in account_data and account_data['id'] == create_user_owner.account_id
 
 
 def test_get_info_unauthorized(client):
-    response = client.get('/user/get_info')
+    response = client.get('/api/user/get_info')
     assert response.status_code == 401
