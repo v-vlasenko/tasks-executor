@@ -18,7 +18,11 @@ class Client:
             }
         }
         response = requests.post(f"{self.host}/auth/signup", json=data)
-        return response.json()
+        if response.status_code == 201:
+            self.token = response.json()["data"]["token"]
+            return self.token
+        else:
+            return None
 
     def login(self, username, password):
         data = {
@@ -48,7 +52,8 @@ class Client:
         return response.json()
 
 
-# Example Usage:
+""" 
+Example Usage:
 client = Client("http://localhost:5000/api")
 
 # Signup a new user
@@ -66,3 +71,4 @@ pprint(invite_response)
 # Get user information
 info_response = client.get_info()
 pprint(info_response)
+"""
