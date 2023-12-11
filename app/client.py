@@ -19,10 +19,10 @@ class Client:
         }
         response = requests.post(f"{self.host}/auth/signup", json=data)
         if response.status_code == 201:
-            self.token = response.json()["data"]["token"]
+            self.token = response.json()["data"]["attributes"]["token"]
             return self.token
         else:
-            return None
+            return response.json()
 
     def login(self, username, password):
         data = {
@@ -35,10 +35,10 @@ class Client:
         }
         response = requests.post(f"{self.host}/auth/login", json=data)
         if response.status_code == 201:
-            self.token = response.json()["data"]["token"]
+            self.token = response.json()["data"]["attributes"]["token"]
             return self.token
         else:
-            return None
+            return response.json()
 
     def invite_user(self, new_username):
         headers = {"Authorization": f"Bearer {self.token}"} if self.token else {}

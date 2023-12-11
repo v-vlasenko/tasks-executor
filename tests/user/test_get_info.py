@@ -1,5 +1,8 @@
 def test_get_info(client, create_user_owner, owner_token):
-    response = client.get('/api/user/get_info', headers={'Authorization': f'Bearer {owner_token}'})
+    response = client.get('/api/user/get_info', headers={
+        'Authorization': f'Bearer {owner_token}',
+        'Content-Type': 'application/vnd.api+json'
+    })
 
     assert response.status_code == 200
     data = response.get_json()['data']
