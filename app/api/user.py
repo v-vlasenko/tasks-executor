@@ -46,22 +46,50 @@ def invite():
     }}), 201
 
 
-@bp.route('/get_info', methods=['GET'])
+# @bp.route('/get_info', methods=['GET'])
+# @jwt_required()
+# def get_info():
+#     account_name = Account.query.filter_by(account_id=current_user.account_id).first().account_name
+#     account_id = Account.query.filter_by(account_id=current_user.account_id).first().account_id
+#     return jsonify({
+#         "data": {
+#             "type": "users",
+#             "id": current_user.user_id,
+#             "attributes": {
+#                 "username": current_user.username,
+#                 "account_name": account_name
+#             },
+#             "relationships": {
+#                 "account": {
+#                     "data": {"type": "accounts", "id": account_id}
+#                 }
+#             }
+#         }
+#     })
+
+
+@bp.route('/get_info/<user_id>', methods=['GET'])
 @jwt_required()
-def get_info():
-    account_name = Account.query.filter_by(account_id=current_user.account_id).first().account_name
-    account_id = Account.query.filter_by(account_id=current_user.account_id).first().account_id
+def get_info(user_id):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if user is None:
+        return jsonify({'error': 'User not found'}), 404
+
+    account = Account.query.filter_by(account_id=user.account_id).first()
+    if account is None:
+        return jsonify({'error': 'Account not found'}), 404
+
     return jsonify({
         "data": {
             "type": "users",
-            "id": current_user.user_id,
+            "id": user.user_id,
             "attributes": {
-                "username": current_user.username,
-                "account_name": account_name
+                "username": user.username,
+                "account_name": account.account_name
             },
             "relationships": {
                 "account": {
-                    "data": {"type": "accounts", "id": account_id}
+                    "data": {"type": "accounts", "id": account.account_id}
                 }
             }
         }

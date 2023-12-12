@@ -1,5 +1,5 @@
 def test_get_info(client, create_user_owner, owner_token):
-    response = client.get('/api/user/get_info', headers={
+    response = client.get(f'/api/user/get_info/{create_user_owner.user_id}', headers={
         'Authorization': f'Bearer {owner_token}',
         'Content-Type': 'application/vnd.api+json'
     })
@@ -21,6 +21,6 @@ def test_get_info(client, create_user_owner, owner_token):
     assert 'id' in account_data and account_data['id'] == create_user_owner.account_id
 
 
-def test_get_info_unauthorized(client):
-    response = client.get('/api/user/get_info')
+def test_invite_unauthorized(client, create_user_owner):
+    response = client.get(f'/api/user/get_info/{create_user_owner.user_id}')
     assert response.status_code == 401

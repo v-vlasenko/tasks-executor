@@ -43,7 +43,12 @@ def test_existing_user_invite(client, create_user_owner, owner_token, create_use
     assert errors[0]['detail'] == 'User already exists'
 
 
-def test_invite_unauthorized(client):
-    response = client.get('/api/user/get_info')
+def test_invite_unauthorized(client, create_user_owner, owner_token):
+    response = client.post('/api/user/invite', json={
+        'data': {'attributes': {
+            'new_username': 'new_user'
+        }}}, headers={
+        'Content-Type': 'application/vnd.api+json'
+    })
     assert response.status_code == 401
 

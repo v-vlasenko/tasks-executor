@@ -19,7 +19,7 @@ def test_with_existing_user(client, create_user_owner):
     response = client.post('/api/auth/signup', json={
         'data': {
             'attributes': {
-                'username': 'test_user_owner',
+                'username': f'{create_user_owner.username}',
                 'password': 'test_password',
                 'account_name': 'test_account'
             }
